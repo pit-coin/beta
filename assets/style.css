@@ -64,6 +64,12 @@ h1, h2 {
 #noFooter a:focus {
     color: lightgray;
 }
+#logo {
+    height: 300px;
+    min-height: 50vh;
+    background: url(/assets/svg.svg) center/contain no-repeat;
+    animation: rotate 600s linear infinite;
+}
 .onestring {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -116,6 +122,10 @@ h2, #logs {
     text-decoration: underline;
 }
 
+@keyframes rotate {
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+}
 @media print, screen and (min-width: 910px) {
     .halfContainer {
         overflow: auto;
