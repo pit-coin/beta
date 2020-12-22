@@ -1,0 +1,145 @@
+/* background lightgray */
+
+@font-face {
+    font-family: 'imported';
+    src: url(font.woff2);
+}
+html, body {
+    margin: 0px;
+    padding: 0px;
+}
+div, button, input {
+    font-family: "imported", sans-serif;
+}
+button {
+    display: block;
+    margin: auto;
+    border: 3px solid black;
+    border-radius: 100px;
+    width: 140px;
+    padding: 12px;
+    background: transparent;
+    font-size: 16px;
+    cursor: pointer;
+    outline: 0;
+}
+button:focus {
+    background: lightgray;
+}
+label {
+    display: block;
+    margin-bottom: 24px;
+    cursor: text;
+}
+label input {
+    display: block;
+    margin-top: 8px;
+    border: none;
+    border-bottom: 1px solid lightgray;
+    width: 100%;
+    background: transparent;
+    font-size: 16px;
+    outline: 0;
+}
+label input:focus {
+    border-color: black;
+}
+h1, h2 {
+    text-align: center;
+    font-weight: normal;
+}
+
+#noFooter {
+    overflow: auto;
+    margin: 0px 5%;
+    min-height: calc(100vh - 96px);
+}
+#noFooter p {
+    text-align: center;
+}
+#noFooter a {
+    color: black;
+    outline: 0;
+}
+#noFooter a:focus {
+    color: lightgray;
+}
+.onestring {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#start {
+    min-height: 64px;
+    padding-top: 8px;
+}
+#connect {
+    display: none;
+}
+h2, #logs {
+    margin-top: 80px;
+}
+.half div {
+    max-width: 400px;
+    margin: 28px auto;
+}
+.hint {
+    padding-left: 10px;
+    font-size: 12px;
+    color: red;
+}
+#refAddress {
+    font-size: 14px;
+}
+#logs {
+    margin-bottom: 32px;
+}
+#logs p {
+    text-align: left;
+}
+#footer {
+    overflow: auto;
+    height: 96px;
+    background: lightgray;
+}
+#footer div {
+    margin-top: 36px;
+    text-align: center;
+}
+#footer a {
+    margin: 0px 2vw;
+    padding: 2px;
+    color: black;
+    text-decoration: none;
+    outline: 0;
+}
+#footer a:focus {
+    text-decoration: underline;
+}
+
+@media print, screen and (min-width: 910px) {
+    .halfContainer {
+        overflow: auto;
+    }
+    .half {
+        float: left;
+        width: 50%;
+    }
+    .row {
+        height: 56px;
+    }
+}
+@media print, screen and (min-width: 1300px) {
+    #noFooter {
+        margin: 0px 15%;
+    }
+    h2 {
+        margin-top: 128px;
+    }
+}
+
+@media (hover: hover) {
+    button:hover {background: lightgray;}
+    label input:hover {border-color: black;}
+    #noFooter a:hover {color: lightgray;}
+    #footer a:hover {text-decoration: underline;}
+}
