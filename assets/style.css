@@ -67,7 +67,7 @@ h1, h2 {
 #logo {
     height: 300px;
     min-height: 50vh;
-    background: url(/assets/svg.svg) center/contain no-repeat;
+    background: url(svg.svg) center/contain no-repeat;
     animation: rotate 600s linear infinite;
 }
 .onestring {
