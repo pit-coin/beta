@@ -4,37 +4,152 @@
     font-family: 'imported';
     src: url(font.woff2);
 }
+div, button, input {
+    font-family: 'imported', sans-serif;
+}
+
 html, body {
     margin: 0px;
     padding: 0px;
 }
-div, button, input {
-    font-family: "imported", sans-serif;
-}
-
 #noFooter {
-    overflow: auto;
+    overflow: hidden;
     min-height: calc(100vh - 96px);
+}
+#header {
+    overflow: hidden;
+    min-height: 64px;
     background: #F7A219;
 }
 #logo {
+    position: absolute;
     overflow: hidden;
-    height: 300px;
-    min-height: 50vh;
+    width: 64px;
+    height: 64px;
 }
 #logo div {
     height: 100%;
     background: url(svg.svg) center/contain no-repeat;
-    animation: rotate 600s linear infinite;
+    animation: logo 60s linear infinite;
 }
-h1 {
-    margin-top: 80px;
+#headerButtons {
+    overflow: hidden;
+    margin: 8px 8px 8px 70px;
+}
+#headerButtons button {
+    display: block;
+    float: right;
+    border: 3px solid #F7A219;
+    border-radius: 100px;
+    padding: 12px;
+    background: transparent;
+    cursor: pointer;
+    outline: 0;
+}
+#connect {
+    display: none;
+    margin-right: 16px;
+}
+#headerButtons button:focus {
+    border: 3px solid black !important;
+    color: white;
+}
+.active {
+    border: 3px solid black !important;
+}
+#startMessage {
+    min-height: 32px;
+}
+h1, h2, #noFooter p {
+    margin-left: 8px;
+    margin-right: 8px;
     text-align: center;
     font-weight: normal;
-    font-size: 5vw;
+}
+.onestring {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#noFooter a {
+    color: black;
+    outline: 0;
+}
+#noFooter a:focus {
+    color: #F7A219;
+    text-decoration: none;
+}
+h2 {
+    margin-top: 80px;
+}
+#trade, #divs {
+    overflow: hidden;
+    margin: auto;
+    width: 96%;
+    max-width: 800px;
+}
+label {
+    display: block;
+    margin: 0px auto 24px;
+    max-width: 380px;
+    cursor: text;
+}
+.hint {
+    padding-left: 10px;
+    font-size: 12px;
+    color: red;
+}
+label input {
+    display: block;
+    margin-top: 8px;
+    border: none;
+    border-bottom: 2px solid black;
+    width: 100%;
+    background: transparent;
+    font-size: 16px;
+    outline: 0;
+}
+label input:focus {
+    border-color: #F7A219;
+}
+#refAddress {
+    font-size: 14px;
+}
+#trade button, #divs button {
+    display: block;
+    margin: auto;
+    border: 3px solid black;
+    border-radius: 100px;
+    width: 140px;
+    padding: 12px;
+    background: transparent;
+    font-size: 16px;
+    cursor: pointer;
+    outline: 0;
+}
+#trade button:focus, #divs button:focus {
+    background: #F7A219;
+    color: white;
+}
+#buy {
+    margin-bottom: 64px !important;
+}
+#divs {
+    margin-top: 32px;
+}
+.smallHalf {
+    float: left;
+    width: 49.9%;
+}
+#logs {
+    margin: 80px auto 1px;
+    width: 96%;
+    max-width: 900px;
+}
+#logs p {
+    text-align: left;
 }
 #footer {
-    overflow: auto;
+    overflow: hidden;
     height: 96px;
     background: #F7A219;
 }
@@ -52,12 +167,64 @@ h1 {
 #footer a:focus {
     text-decoration: underline;
 }
+#loading {
+    overflow: hidden;
+    display: none;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background: #FAFAFA;
+    opacity: 0.9;
+    cursor: wait;
+    animation: loadingBackground 1s forwards;
+}
+#loading div {
+    margin: auto;
+    margin-top: 30vh;
+    width: 100px;
+    height: 100px;
+    background: url(svg.svg) center/contain no-repeat;
+    animation: loading 6s linear infinite;
+}
 
-@keyframes rotate {
+@keyframes logo {
     0% {transform: rotate(0deg);}
     100% {transform: rotate(360deg);}
 }
+@keyframes loadingBackground {
+    0% {opacity: 0}
+    10% {opacity: 0}
+    100% {opacity: 0.9}
+}
+@keyframes loading {
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(-360deg);}
+}
 
 @media (hover: hover) {
+    #headerButtons button:hover {border: 3px solid black !important;}
+    #noFooter a:hover {color: #F7A219;}
+    label input:hover {border-color: #F7A219;}
+    #trade button:hover, #divs button:hover {background: #F7A219;}
     #footer a:hover {text-decoration: underline;}
+}
+
+@media print, screen and (min-width: 850px) {
+    #trade {
+        margin-top: 32px;
+    }
+    .half {
+        float: left;
+        width: 49.9%;
+    }
+    .row {
+        height: 56px;
+    }
+}
+@media print, screen and (min-width: 1300px) {
+    h2 {
+        margin-top: 128px;
+    }
 }

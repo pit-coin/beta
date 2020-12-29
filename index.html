@@ -5,7 +5,7 @@
 
         <meta charset="utf-8" />
 
-        <meta name="description" content="Erc20 ethereum token with fixed price of 0.1 eth. Buy/sell 10% fee, transfer 5% fee, fee is distributed among all holders. Referral bonus 3% for holders with more than 10 pit. No owners and administrators." />
+        <meta name="description" content="Erc20 ethereum and tron token with fixed price of 0.1 eth or trx. Buy/sell 10% fee, transfer 5% fee, fee is distributed among all holders. Referral bonus 3% for holders with more than 10 pit. No owners and administrators." />
         <meta name="keywords" content="pitcoin network" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="theme-color" content="#F7A219" />
@@ -15,8 +15,75 @@
     </head>
     <body>
         <div id="noFooter">
-            <div id="logo"><div></div></div>
+            <div id="header">
+                <div id="logo"><div></div></div>
+                <div id="headerButtons">
+                    <button id="trx" type="button">TRX</button>
+                    <button id="eth" type="button" class="active">ETH</button>
+                    <button id="connect" type="button">CONNECT</button>
+                </div>
+            </div>
+            <p id="startMessage"></p>
             <h1>PITcoin Bond</h1>
+            <p>Fully ERC20-compliant token</p>
+            <p class="onestring">Contract
+                <a id="contract"
+                   href="https://etherscan.io/address/0x99cbe93AFee15456a1115540e7F534F6629bAB3f"
+                   target="_blank" rel="noopener">0x99cbe93AFee15456a1115540e7F534F6629bAB3f</a>
+            </p>
+            <p>Contract balance <span id="contractBalance">...</span> <span class="currency"></span></p>
+            <p>Fixed price 0.1 <span class="currency">ETH</span>/PIT</p>
+            <p>Buy: 10% fee - Sell: 10% fee - Transfer: 5% fee - Withdraw and Reinvest: No Fee</p>
+            <p>Referral Bonus: 3% Minimal amount required to receive referral bonuses = 10 PIT</p>
+            <p>
+                To buy, sell, reinvest and withdraw tokens you can move
+                <span class="currency"></span>
+                directly on the contract address
+            </p>
+            <p>No owners, administrators or GOVERNANCE. Enjoy!</p>
+            <h2>Your balance <span id="balance">...</span> PIT</h2>
+            <p>Buy and sell PIT</p>
+            <div id="trade">
+                <div class="half">
+                    <label>
+                        <span class="currency">ETH</span> value
+                        <span id="buyValueHint" class="hint"></span>
+                        <input id="buyValue" type="text" maxlength="22" />
+                    </label>
+                    <label class="row">
+                        Referral address (optional)
+                        <span id="refAddressHint" class="hint"></span>
+                        <input id="refAddress" type="text" size="42" maxlength="42" />
+                    </label>
+                    <button id="buy" type="button">Buy</button>
+                </div>
+                <div class="half">
+                    <label>
+                        PIT value
+                        <span id="sellValueHint" class="hint"></span>
+                        <input id="sellValue" type="text" maxlength="22" />
+                    </label>
+                    <label class="row"></label>
+                    <button id="sell" type="button">Sell</button>
+                </div>
+            </div>
+            <h2>
+                Your Interest
+                <span id="dividend">...</span>
+                <span class="currency">ETH</span>, including referral
+                <span id="refDividend">...</span>
+                <span class="currency">ETH</span>
+            </h2>
+            <p>Reinvest and withdraw Interest</p>
+            <div id="divs">
+                <div class="smallHalf">
+                    <button id="reinvest" type="button">Reinvest</button>
+                </div>
+                <div class="smallHalf">
+                    <button id="withdraw" type="button">Withdraw</button>
+                </div>
+            </div>
+            <div id="logs"></div>
         </div>
         <div id="footer">
             <div>
@@ -28,6 +95,7 @@
                    href="https://github.com/pit-coin/pit-coin.github.io">github</a>
             </div>
         </div>
+        <div id="loading"><div></div></div>
         <script src="assets/bignumber.min.js"></script>
         <script src="assets/script.js"></script>
     </body>
