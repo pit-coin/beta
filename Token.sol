@@ -1,4 +1,16 @@
-pragma solidity 0.5.14;
+/*
+
+"Participation in Immutable Transparency (PITcoin)
+
+Regulating the Regulators
+
+Taking the business out of law, banking and politics."
+
+"A Blockchain For What Is Best Creation"
+
+*/
+
+pragma solidity 0.5.8;
 
 
 interface Erc20 {
@@ -51,6 +63,8 @@ library Math {
 }
 
 
+/// @title PITcoin Bond
+/// @author aqoleg
 contract Token {
     using Math for uint256;
     using Math for int256;
@@ -62,15 +76,15 @@ contract Token {
     string public name; // erc20
     string public symbol; // erc20
 
-    // wei*price = totalSupply + totalSupply*profitPerToken/multiplicator - sum(payoutsOf) + sum(refDividendsOf)
+    // trx*price = totalSupply + totalSupply*profitPerToken/multiplicator - sum(payoutsOf) + sum(refDividendsOf)
     // dividendsOf = balanceOf*profitPerToken/multiplicator - payoutsOf
     // allDividends = dividendsOf + refDividendsOf
-    uint256 public constant price = 10000000000000; // tokens/wei
+    uint256 public constant price = 1000000000000; // tokens/trx
     uint256 public profitPerToken;
     uint256 public constant multiplicator = 2**64;
     mapping(address => int256) public payoutsOf; // tokens
     mapping(address => uint256) public refDividendsOf; // tokens
-    uint256 public constant refRequirement = 10**19; // tokens
+    uint256 public constant refRequirement = 10**21; // tokens
 
     /// @dev erc20
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
@@ -96,7 +110,7 @@ contract Token {
         symbol = _symbol;
     }
 
-    /// @notice converts 90% of incoming eth in tokens, spreads rest as dividends
+    /// @notice converts 90% of incoming trx in tokens, spreads rest as dividends
     function () external payable {
         buy(address(0));
     }
@@ -186,9 +200,8 @@ contract Token {
         uint256 fee = tokens.div(10);
         tokens = tokens.sub(fee);
 
-        if (_ref != address(0)) {
+        if (_ref != address(0) && balanceOf[_ref] >= refRequirement) {
             require(_ref != msg.sender, "_ref is sender");
-            require(balanceOf[_ref] >= refRequirement, "small balance");
             uint256 refBonus = fee.mul(3).div(10);
             fee = fee.sub(refBonus);
             refDividendsOf[_ref] = refDividendsOf[_ref].add(refBonus);

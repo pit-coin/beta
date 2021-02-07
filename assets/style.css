@@ -46,13 +46,13 @@ html, body {
     cursor: pointer;
     outline: 0;
 }
+#headerButtons button:focus {
+    border-color: black;
+    color: white;
+}
 #connect {
     display: none;
     margin-right: 16px;
-}
-#headerButtons button:focus {
-    border: 3px solid black !important;
-    color: white;
 }
 .active {
     border: 3px solid black !important;
@@ -194,9 +194,9 @@ label input:focus {
     100% {transform: rotate(360deg);}
 }
 @keyframes loadingBackground {
-    0% {opacity: 0}
-    10% {opacity: 0}
-    100% {opacity: 0.9}
+    0% {opacity: 0;}
+    10% {opacity: 0;}
+    100% {opacity: 0.9;}
 }
 @keyframes loading {
     0% {transform: rotate(0deg);}
@@ -204,7 +204,7 @@ label input:focus {
 }
 
 @media (hover: hover) {
-    #headerButtons button:hover {border: 3px solid black !important;}
+    #headerButtons button:hover {border-color: black;}
     #noFooter a:hover {color: #F7A219;}
     label input:hover {border-color: #F7A219;}
     #trade button:hover, #divs button:hover {background: #F7A219;}
