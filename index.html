@@ -5,8 +5,12 @@
 
         <meta charset="utf-8" />
 
-        <meta name="description" content="Erc20 ethereum and tron token with fixed price of 0.1 eth or 1 trx. Buy/sell 10% fee, transfer 5% fee, fee is distributed among all holders. Referral bonus 3% for holders with more than 10 eth pit or 1000 trx pit. No owners and administrators." />
-        <meta name="keywords" content="pitcoin network aqoleg" />
+        <meta name="description"
+              content="Erc20 ethereum and tron token with fixed price of 0.1 eth or 1 trx.
+                       Buy/sell 10% fee, transfer 5% fee, fee is distributed among all holders.
+                       Referral bonus 3% for holders with more than 10 eth pit or 1000 trx pit.
+                       No owners and administrators." />
+        <meta name="keywords" content="pitcoin bond network aqoleg" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="theme-color" content="#F7A219" />
 
@@ -49,11 +53,6 @@
                         <span id="buyValueHint" class="hint"></span>
                         <input id="buyValue" type="text" maxlength="22" />
                     </label>
-                    <label class="row">
-                        Referral address (optional)
-                        <span id="refAddressHint" class="hint"></span>
-                        <input id="refAddress" type="text" size="42" maxlength="42" />
-                    </label>
                     <button id="buy" type="button">Buy</button>
                 </div>
                 <div class="half">
@@ -62,7 +61,6 @@
                         <span id="sellValueHint" class="hint"></span>
                         <input id="sellValue" type="text" maxlength="25" />
                     </label>
-                    <label class="row"></label>
                     <button id="sell" type="button">Sell</button>
                 </div>
             </div>
@@ -82,6 +80,8 @@
                     <button id="withdraw" type="button">Withdraw</button>
                 </div>
             </div>
+            <h2 id="ref">Your referral link</h2>
+            <p id="reflink"></p>
             <div id="logs"></div>
         </div>
         <div id="footer">

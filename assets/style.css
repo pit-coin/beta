@@ -111,9 +111,6 @@ label input {
 label input:focus {
     border-color: #F7A219;
 }
-#refAddress {
-    font-size: 14px;
-}
 #trade button, #divs button {
     display: block;
     margin: auto;
@@ -131,7 +128,7 @@ label input:focus {
     color: white;
 }
 #buy {
-    margin-bottom: 64px !important;
+    margin-bottom: 48px !important;
 }
 #divs {
     margin-top: 32px;
@@ -139,6 +136,12 @@ label input:focus {
 .smallHalf {
     float: left;
     width: 49.9%;
+}
+#ref {
+    display: none;
+}
+#reflink {
+    word-break: break-all;
 }
 #logs {
     margin: 80px auto 1px;
@@ -218,9 +221,6 @@ label input:focus {
     .half {
         float: left;
         width: 49.9%;
-    }
-    .row {
-        height: 56px;
     }
 }
 @media print, screen and (min-width: 1300px) {

@@ -174,14 +174,6 @@
                 document.getElementById('buyValue').value = '';
             }
         };
-        document.getElementById('refAddress').onkeyup = function (event) {
-            if (event.keyCode === 13) {
-                event.preventDefault();
-                buy();
-            } else if (event.keyCode === 27) {
-                document.getElementById('refAddress').value = '';
-            }
-        };
         document.getElementById('sellValue').onkeyup = function (event) {
             if (event.keyCode === 13) {
                 event.preventDefault();
@@ -228,7 +220,7 @@
                 document.getElementById('startMessage').innerHTML = 'install ' +
                     '<a target="_blank" rel="noopener" href="https://chrome.google.com/webstore/' +
                     'detail/tronlink/ibnejdfjmmkpcnlpebklmnkoeoihofec">tronlink</a> or use ' +
-                    '<a target="_blank" rel="noopener" href="https://opera.com">opera</a>';
+                    '<a target="_blank" rel="noopener" href="https://opera.com">opera</a> mobile';
             } else {
                 load();
             }
@@ -268,9 +260,9 @@
                     loadContractBalance();
                     clearLogs();
                     contract.events.allEvents().on('data', function () {
-                        if (eth && network !== null) {
+                        if (eth && network) {
                             loadContractBalance();
-                            if (account !== null) {
+                            if (account) {
                                 loadAccount();
                             }
                         }
@@ -338,15 +330,13 @@
                     loadContractBalance();
                     loadAccount();
                     contract.Transfer().watch(function (error, result) {
-console.log('transfer:');console.log(result);
-                        if (!error && !eth && network !== null) {
+                        if (!error && !eth && network && contract) {
                             loadContractBalance();
                             loadAccount();
                         }
                     });
                     contract.Withdraw().watch(function (error, result) {
-console.log('withdraw:');console.log(result);
-                        if (!error && !eth && network !== null) {
+                        if (!error && !eth && network && contract) {
                             loadContractBalance();
                             loadAccount();
                         }
@@ -407,7 +397,6 @@ console.log('withdraw:');console.log(result);
 
     function buy() {
         document.getElementById('buyValueHint').innerHTML = '';
-        document.getElementById('refAddressHint').innerHTML = '';
         if (!check()) {
             return;
         }
@@ -420,14 +409,6 @@ console.log('withdraw:');console.log(result);
             document.getElementById('buyValueHint').innerHTML = 'enter a positive number';
             document.getElementById('buyValue').focus();
             return;
-        }
-        var address = document.getElementById('refAddress').value;
-        if (address !== '') {
-            if ((eth && !web3.utils.isAddress(address)) || (!eth && !tronWeb.isAddress(address))) {
-                document.getElementById('refAddressHint').innerHTML = 'enter correct address';
-                document.getElementById('refAddress').focus();
-                return;
-            }
         }
         startLoading();
         var f;
@@ -453,42 +434,41 @@ console.log('withdraw:');console.log(result);
         }).catch(error);
 
         function checkRef() {
-            if (address !== '') {
-                if (eth) {
-                    f = contract.methods.balanceOf(address).call();
-                } else {
-                    f = contract.balanceOf(address).call();
+            var ref = parse(eth ? 'eth' : 'trx');
+            if (ref === account) {
+                console.log('using you address as ref');
+                ref = null;
+            }
+            if (ref) {
+                if ((eth && !web3.utils.isAddress(ref)) || (!eth && !tronWeb.isAddress(ref))) {
+                    console.log('incorrect ref');
+                    ref = null;
                 }
-                f.then(function (balance) {
-                    if (new BigNumber(balance).shiftedBy(-18).isLessThan(eth ? 10 : 1000)) {
-                        document.getElementById('refAddressHint').innerHTML = 'not a referral';
-                        document.getElementById('refAddress').focus();
-                        stopLoading();
-                    } else if (eth) {
-                        doEthTx();
-                    } else {
-                        doTronTx();
-                    }
-                }).catch(error);
+            }
+            if (eth) {
+                if (ref) {
+                    contract.methods.balanceOf(ref).call().then(function (balance) {
+                        if (new BigNumber(balance).shiftedBy(-18).isLessThan(10)) {
+                            console.log('not a ref');
+                            ref = '0x0000000000000000000000000000000000000000';
+                        }
+                        doEthTx(ref);
+                    }).catch(error);
+                } else {
+                    doEthTx('0x0000000000000000000000000000000000000000');
+                }
             } else {
-                if (eth) {
-                    address = '0x0000000000000000000000000000000000000000';
-                    doEthTx();
-                } else {
-                    address = 'T9yD14Nj9j7xAB4dbGeiX9h8unkKHxuWwb';
-                    doTronTx();
-                }
+                doTronTx(ref ? ref : 'T9yD14Nj9j7xAB4dbGeiX9h8unkKHxuWwb');
             }
         }
 
-        function doEthTx() {
+        function doEthTx(ref) {
             var message;
-            contract.methods.buy(address).send({
+            contract.methods.buy(ref).send({
                 from: account,
                 value: value.shiftedBy(18)
             }).on('transactionHash', function (hash) {
                 document.getElementById('buyValue').value = '';
-                document.getElementById('refAddress').value = '';
                 message = logTx('purchase for ' + value + ' ETH', hash);
                 stopLoading();
             }).on('confirmation', function (confirmationNumber, receipt) {
@@ -505,13 +485,12 @@ console.log('withdraw:');console.log(result);
             }).catch(error);
         }
 
-        function doTronTx() {
+        function doTronTx(ref) {
             var message;
-            contract.buy(address).send({
+            contract.buy(ref).send({
                 callValue: value.shiftedBy(6)
             }).then(function (hash) {
                 document.getElementById('buyValue').value = '';
-                document.getElementById('refAddress').value = '';
                 message = logTx('purchase for ' + value + ' TRX', hash);
                 stopLoading();
                 checkTronTx(hash, message);
@@ -646,13 +625,17 @@ console.log('withdraw:');console.log(result);
             alert('loading...');
         } else if (!eth && !window.tronWeb) {
             alert('tron is not supported');
-        } else if (network === null) {
+        } else if (!eth && !account) {
+            alert('open tronlink');
+        } else if (!network) {
             if (eth) {
                 alert('switch to the main, ropsten or goerli network');
             } else {
                 alert('switch to the main or shasta network');
             }
-        } else if (account === null) {
+        } else if (!contract) {
+            alert('loading...');
+        } else if (eth && !account) {
             connect();
         } else {
             return true;
@@ -678,20 +661,18 @@ console.log('withdraw:');console.log(result);
 
     function checkTronTx(hash, message) {
         setTimeout(function () {
-            if (eth || !network) {
+            if (eth || !network || !contract) {
                 return;
             }
             loadContractBalance();
-            loadAccount();    
+            loadAccount();
             tronWeb.trx.getConfirmedTransaction(hash).then(function (tx) {
-console.log(tx);
                 if (tx.ret[0].contractRet === 'SUCCESS') {
                     message.innerHTML = ' - confirmed';
                 } else {
                     message.innerHTML = ' - rejected';
                 }
             }).catch(function (error) {
-console.log(error);
                 if (error.toString().includes('not found')) {
                     checkTronTx(hash, message);
                 }
@@ -761,14 +742,14 @@ console.log(error);
         document.getElementById('balance').innerHTML = '...';
         document.getElementById('buyValueHint').innerHTML = '';
         document.getElementById('buyValue').value = '';
-        document.getElementById('refAddressHint').innerHTML = '';
-        document.getElementById('refAddress').value = '';
         document.getElementById('sellValueHint').innerHTML = '';
         document.getElementById('sellValue').value = '';
         document.getElementById('dividend').title = '';
         document.getElementById('dividend').innerHTML = '...';
         document.getElementById('refDividend').title = '';
         document.getElementById('refDividend').innerHTML = '...';
+        document.getElementById('ref').style.display = 'none';
+        document.getElementById('reflink').innerHTML = '';
     }
 
     function loadAccount() {
@@ -788,6 +769,12 @@ console.log(error);
             contract.methods.balanceOf(account).call().then(function (balance) {
                 accountTokens = new BigNumber(balance).shiftedBy(-18);
                 printValue(accountTokens, document.getElementById('balance'));
+                if (accountTokens >= 10) {
+                    var link = window.location.hostname + window.location.pathname + '?eth=' + account;
+                    document.getElementById('ref').style.display = 'block';
+                    document.getElementById('reflink').innerHTML = '<a target="_blank" rel="noopener" ' +
+                        'href="https://' + link + '">' + link + '</a>';
+                }
             }).catch(error);
         } else {
             contract.refDividendsOf(account).call().then(function (dividends) {
@@ -804,6 +791,12 @@ console.log(error);
             contract.balanceOf(account).call().then(function (balance) {
                 accountTokens = new BigNumber(balance).shiftedBy(-18);
                 printValue(accountTokens, document.getElementById('balance'));
+                if (accountTokens >= 1000) {
+                    var link = window.location.hostname + window.location.pathname + '?trx=' + account;
+                    document.getElementById('ref').style.display = 'block';
+                    document.getElementById('reflink').innerHTML = '<a target="_blank" rel="noopener" ' +
+                        'href="https://' + link + '">' + link + '</a>';
+                }
             }).catch(error);
         }
     }
@@ -894,9 +887,7 @@ console.log(error);
         a.setAttribute('rel', 'noopener');
         p.appendChild(a);
         span = document.createElement('span');
-        if (eth) {
-            span.innerHTML = ' - unconfirmed';
-        }
+        span.innerHTML = ' - unconfirmed';
         p.appendChild(span);
         var logs = document.getElementById('logs');
         logs.insertBefore(p, logs.firstChild);
@@ -909,5 +900,19 @@ console.log(error);
 
     function stopLoading() {
         document.getElementById('loading').style.display = 'none';
+    }
+
+    function parse(query) {
+        var startIndex = window.location.search.indexOf(query + '=');
+        if (startIndex < 0) {
+            return null;
+        }
+        startIndex = startIndex + query.length + 1;
+        var stopIndex = window.location.search.indexOf('&', startIndex);
+        if (stopIndex < 0) {
+            return window.location.search.substring(startIndex);
+        } else {
+            return window.location.search.substring(startIndex, stopIndex);
+        }
     }
 })();
