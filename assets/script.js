@@ -4,7 +4,7 @@
     var ethAddress = '0x99cbe93AFee15456a1115540e7F534F6629bAB3f';
     var ropstenAddress = '0x6342A5c056F71E7E3a6Bf89560Dc1F97210bDb51';
     var goerliAddress = '0x6011b6573fA152ded3d3188Ee6a90842BEa38b42';
-    var tronAddress = '';
+    var tronAddress = 'TBxWTtKLUX4JcBbow9C41Q5EomdtQNZp97';
     var shastaAddress = 'TKd1M1kRJ2gJV5KwTphxE9a7jPNHztZzc7';
     var networkEth = 1;
     var networkRopsten = 3;
