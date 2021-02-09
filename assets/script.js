@@ -420,7 +420,8 @@
         f.then(function (balance) {
             balance = new BigNumber(balance).shiftedBy(eth ? -18 : -6);
             if (balance.isZero()) {
-                document.getElementById('buyValueHint').innerHTML = 'you have no ' + eth ? 'eth' : 'trx';
+                document.getElementById('buyValueHint').innerHTML = 'you have no ' +
+                    (eth ? 'eth' : 'trx');
                 stopLoading();
                 return;
             } else if (value.isGreaterThan(balance)) {
