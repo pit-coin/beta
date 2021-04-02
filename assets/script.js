@@ -416,7 +416,11 @@
             }).then(function (newNetwork) {
                 stopLoading();
                 newNetwork = Number(newNetwork);
-                if (newNetwork !== networkEth && newNetwork !== networkRopsten &&
+                if (bnb) {
+                    if (newNetwork !== networkBnbTest) {
+                        alert('switch to the binance testnet');
+                    }
+                } else if (newNetwork !== networkEth && newNetwork !== networkRopsten &&
                     newNetwork !== networkGoerli) {
                     alert('switch to the main, ropsten or goerli network');
                 }
