@@ -23,12 +23,22 @@
                 <div id="logo"><div></div></div>
                 <div id="headerButtons">
                     <button id="trx" type="button" class="active">TRX</button>
+                    <button id="bnb" type="button">BNB</button>
                     <button id="eth" type="button">ETH</button>
                     <button id="connect" type="button">CONNECT</button>
                 </div>
             </div>
             <p id="startMessage"></p>
             <h1>PITcoin Bond</h1>
+            <p id="bnbHelp">
+                Try binance smart chain!
+                Open metemask, select "networks", "custom rpc".
+                Enter: network name - "binance testnet",
+                network rpc url - "https://data-seed-prebsc-1-s1.binance.org:8545/",
+                chain id - 97, symbol - "bnb", block explorer url - "https://testnet.bscscan.com".
+                Get free test bnb in the <a target="_blank" rel="noopener"
+                                            href="https://testnet.binance.org/faucet-smart">faucet</a>.
+            </p>
             <p>Fully <span id="erc">TRC</span>20-compliant token</p>
             <p class="onestring">Contract
                 <a id="contract"

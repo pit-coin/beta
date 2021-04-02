@@ -4,11 +4,13 @@
     var ethAddress = '0x99cbe93AFee15456a1115540e7F534F6629bAB3f';
     var ropstenAddress = '0x6342A5c056F71E7E3a6Bf89560Dc1F97210bDb51';
     var goerliAddress = '0x6011b6573fA152ded3d3188Ee6a90842BEa38b42';
+    var bnbTestAddress = '0x47318ED745102cD647017ae8F29cf7155c935Fe9';
     var tronAddress = 'TBxWTtKLUX4JcBbow9C41Q5EomdtQNZp97';
     var shastaAddress = 'TKd1M1kRJ2gJV5KwTphxE9a7jPNHztZzc7';
     var networkEth = 1;
     var networkRopsten = 3;
     var networkGoerli = 5;
+    var networkBnbTest = 97;
     var networkTron = 'https://api.trongrid.io';
     var networkTronStack = 'https://api.tronstack.io';
     var networkShasta = 'https://api.shasta.trongrid.io';
@@ -113,6 +115,7 @@
     ];
 
     var eth = false;
+    var bnb = false; 
     var web3loaded = false;
     var network = null;
     var contract = null;
@@ -121,10 +124,13 @@
 
     window.onload = function () {
         document.getElementById('eth').onclick = function () {
-            setEth(true);
+            setEth(true, false);
+        };
+        document.getElementById('bnb').onclick = function () {
+            setEth(true, true);
         };
         document.getElementById('trx').onclick = function () {
-            setEth(false);
+            setEth(false, false);
         };
         document.getElementById('connect').onclick = connect;
         document.getElementById('buy').onclick = buy;
@@ -164,7 +170,7 @@
             };
             document.body.appendChild(script);
         }
-        setEth(false);
+        setEth(false, false);
 
         document.getElementById('buyValue').onkeyup = function (event) {
             if (event.keyCode === 13) {
@@ -184,16 +190,23 @@
         };
     };
 
-    function setEth(isEth) {
+    function setEth(isEth, isBnb) {
         eth = isEth;
+        bnb = isBnb;
         network = null;
         contract = null;
         account = null;
-        document.getElementById('eth').className = eth ? 'active' : '';
+        document.getElementById('eth').className = eth && !bnb ? 'active' : '';
+        document.getElementById('bnb').className = bnb ? 'active' : '';
         document.getElementById('trx').className = eth ? '' : 'active';
+        document.getElementById('bnbHelp').style.display = bnb ? 'block' : 'none';
         var list = document.getElementsByClassName('currency');
         for (var i = 0; i < list.length; i++) {
-            list[i].innerHTML = eth ? 'ETH' : 'TRX';
+            if (!eth) {
+                list[i].innerHTML = 'TRX';
+            } else {
+                list[i].innerHTML = bnb ? 'BNB' : 'ETH';
+            }
         }
         document.getElementById('erc').innerHTML = eth ? 'ERC' : 'TRC';
         document.getElementById('price').innerHTML = eth ? '0.1' : '1';
@@ -203,7 +216,7 @@
         clearLogs();
         if (eth) {
             if (!window.ethereum) {
-                printContractLink(networkEth);
+                printContractLink(bnb ? networkBnbTest : networkEth);
                 document.getElementById('startMessage').innerHTML = 'install ' +
                     '<a target="_blank" rel="noopener" href="https://metamask.io/download.html">' +
                     'metamask</a> or use ' +
@@ -232,7 +245,20 @@
         if (eth) {
             web3.eth.getChainId().then(function (newNetwork) {
                 newNetwork = Number(newNetwork);
-                if (newNetwork !== networkEth && newNetwork !== networkRopsten &&
+                if (bnb) {
+                    if (newNetwork !== networkBnbTest) {
+                        network = null;
+                        account = null;
+                        document.getElementById('connect').style.display = 'block';
+                        document.getElementById('startMessage').innerHTML =
+                            'switch to the binance testnet';
+                        printContractLink(networkBnbTest);
+                        clearContractBalance();
+                        clearAccount();
+                        clearLogs();
+                        return;
+                    }
+                } else if (newNetwork !== networkEth && newNetwork !== networkRopsten &&
                     newNetwork !== networkGoerli) {
                     network = null;
                     account = null;
@@ -254,6 +280,8 @@
                         contract = new web3.eth.Contract(abi, ropstenAddress);
                     } else if (network === networkGoerli) {
                         contract = new web3.eth.Contract(abi, goerliAddress);
+                    } else if (network === networkBnbTest) {
+                        contract = new web3.eth.Contract(abi, bnbTestAddress);
                     }
                     document.getElementById('startMessage').innerHTML = '';
                     printContractLink(network);
@@ -705,6 +733,10 @@
                 document.getElementById('contract').innerHTML = goerliAddress;
                 document.getElementById('contract').href =
                     'https://goerli.etherscan.io/address/' + goerliAddress;
+            } else if (network === networkBnbTest) {
+                document.getElementById('contract').innerHTML = bnbTestAddress;
+                document.getElementById('contract').href =
+                    'https://testnet.bscscan.com/address/' + bnbTestAddress;
             }
         } else {
             if (network === networkTron || network === networkTronStack) {
@@ -826,6 +858,8 @@
                 p.innerHTML = 'ethereum ropsten test network';
             } else if (network === networkGoerli) {
                 p.innerHTML = 'ethereum goerli test network';
+            } else if (network === networkBnbTest) {
+                p.innerHTML = 'binance testnet';
             }
         } else {
             if (network === networkTron || network === networkTronStack) {
@@ -852,6 +886,8 @@
                 a.href = 'https://ropsten.etherscan.io/address/' + account;
             } else if (network === networkGoerli) {
                 a.href = 'https://goerli.etherscan.io/address/' + account;
+            } else if (network === networkBnbTest) {
+                a.href = 'https://testnet.bscscan.com/address/' + account;
             }
         } else {
             a.innerHTML = account;
@@ -883,6 +919,8 @@
                 a.href = 'https://ropsten.etherscan.io/tx/' + hash;
             } else if (network === networkGoerli) {
                 a.href = 'https://goerli.etherscan.io/tx/' + hash;
+            } else if (network === networkBnbTest) {
+                a.href = 'https://testnet.bscscan.com/tx/' + hash;
             }
         } else {
             if (network === networkTron || network === networkTronStack) {

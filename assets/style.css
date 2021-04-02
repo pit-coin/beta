@@ -60,6 +60,9 @@ html, body {
 #startMessage {
     min-height: 32px;
 }
+#bnbHelp {
+    display: none;
+}
 h1, h2, #noFooter p {
     margin-left: 8px;
     margin-right: 8px;
